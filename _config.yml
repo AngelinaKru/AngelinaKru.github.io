@@ -1,0 +1,27 @@
+# Site settings
+title: Your Site Title
+description: A brief description of your site
+baseurl: / # If your site is hosted in a subdirectory, specify it here
+
+# Build settings
+markdown: kramdown # or markdown engine of your choice
+theme: jekyll-theme-primer # specify your theme, if used
+
+# Destination directory
+destination: _site
+
+# Exclude files/folders from being processed
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .git
+  - .github
+
+# Plugins
+plugins:
+  - jekyll-github-metadata
+  # Add other plugins if needed
+
+# Additional configurations (if needed)
