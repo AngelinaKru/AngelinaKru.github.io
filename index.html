@@ -1,59 +1,117 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>My Portfolio</title>
-    <link rel="stylesheet" href="portfolioStyle.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"> 
-    <script type="module" src="portoflioScript.js"></script>
-
-
-
-  </head>
-  <body>
-    <header>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
     
-      <h1>My Portfolio</h1>
-      <nav>
-        <ul>
-          <li><a href="#about">About</a></li>
-          <li><a href="#projects">Projects</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </nav>
-    </header>
-    <main>
-      <div id="container3D">
-
-      </div>
-      <section id="about">
-        <h2>About Me</h2>
-        <p>Angelina Kruchinina</p>
-      </section>
-      <section id="projects">
-        <h2>My Projects</h2>
-        <div class="project">
-          <h3>Project 1</h3>
-          <p>Search weather conditions by locations.</p>
-          <a href="WeatherApp_js/index.html">Weather App</a>
+<div class="card">
+    <div class="search">
+        <input type="text" placeholder="Enter city name"
+        spellcheck="false">
+        <button> <img src="images/search.png"></button>
+    </div>
+    <div class="error">
+        <p>City not found</p>
+    </div>
+    <div class="weather">
+        <img src="images/rain.png" class="weather-icon">
+        <h1 class="temp">22°C</h1>
+        <h2 class="city">Petrozavodsk</h2>
+        <div class="details">
+            <div class="column">
+                <img src="images/humidity.png">
+                <div>
+                    <p class="humidity">50%</p>
+                    <p>Humidity</p>
+                </div>
+            </div>
+            <div class="column">
+                <img src="images/wind.png">
+                <div>
+                    <p class="wind">15 km/h</p>
+                    <p>Wind speed</p>
+                </div>
+            </div>
         </div>
-        <div class="project">
-          <h3>Project 2</h3>
-          <p>Test your knoledge about Finland.</p>
-          <a href="Quiz_js/index.html">Quiz</a>
-        </div>
-        <div class="project">
-            <h3>Project 3</h3>
-            <p>Do you remember Doodle Jump? Try to play.</p>
-            <a href="Doodle_Jump_js/index.html">Doodle Jump</a>
-          </div>
-          <div class="project">
-            <h3>Project 4</h3>
-            <p>Let's have a funny moments!</p>
-            <a href="MEME-Generator_js/index.html">Meme Generator</a>
-          </div>
-      </section>
-      <section id="contact">
-        <h2>Contact Me</h2>
+    </div>
+</div>
 
-  </body>
+<script>
+    const apiKey ="af7c183d6a91c621233edcb1a69128fd";
+    const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+    
+    const searchBox = document.querySelector(".search input");
+    const searchButton = document.querySelector(".search button");
+    const weatherIcon = document.querySelector(".weather-icon");
+
+
+    /*Async functions will always return a value. It makes sure
+    that a promise is returned and if it is not returned then JavaScript automatically
+    wraps it in a promise which is resolved with its value */
+    async function checkWeather(city){
+        if(city == undefined) {
+            city = "Petrozavodsk";
+        }
+        // wait until the promise resolves
+        const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+
+        /* The status read-only property of the Response interface
+        contains the HTTP status codes of the response. For example,
+        200 for success, 404 if the resource could not be found.*/
+        if(response.status == 404) {
+            document.querySelector(".error").style.display = "block";
+            document.querySelector(".weather").style.display = "none";
+            return;
+        }
+        else {
+             /* The json() method of the Response interface takes a
+              Response stream and reads it to completion. It returns a promise which
+              resolves with the result of parsing the body text as JSON. */
+             var data = await response.json();
+
+             //console.log(data);
+
+            /* The Document method querySelector() returns the first Element
+            within the document that matches the specified selector, or group of selectors.
+            If no matches are found, null is returned. */
+            document.querySelector(".city").innerHTML = data.name;
+            document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°C";
+            document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+            document.querySelector(".wind").innerHTML = Math.round(data.wind.speed) + "km/h";    
+
+            if(data.weather[0].main == "Clouds") {
+            weatherIcon.src = "images/clouds.png";
+            }
+            else if (data.weather[0].main == "Clear") {
+            weatherIcon.src = "images/clear.png";
+            }
+            else if (data.weather[0].main == "Rain") {
+           weatherIcon.src = "images/rain.png";
+            }
+            else if (data.weather[0].main == "Drizzle") {
+             weatherIcon.src = "images/drizzle.png";
+            }
+            else if (data.weather[0].main == "Mist") {
+            weatherIcon.src = "images/mist.png";
+            }
+
+        // Display the weather card as block
+        document.querySelector(".weather").style.display = "block";
+        document.querySelector(".error").style.display = "none";
+        }
+    }
+
+    /* When user press the button, the city name (search input)
+    will be passed to the checkWeather function */
+    searchButton.addEventListener("click", ()=>{
+        checkWeather(searchBox.value);
+    });
+
+    checkWeather();
+</script>
+</body>
 </html>
