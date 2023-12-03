@@ -1,10 +1,12 @@
 const weatherButton = document.getElementById("weatherBtn");
-const weatherIcon = document.querySelector(".weatherApp");
+const weatherDiv = document.querySelector(".weatherApp");
+
 
 weatherButton.addEventListener("click", () => {
-    if (weatherIcon.style.display === "none") {
-        weatherIcon.style.display = "block";
+    console.log("weather button clicked");
+    if (weatherDiv.style.display === "none") {
+        weatherDiv.style.display = "block";
     } else {
-        weatherIcon.style.display = "none";
+        weatherDiv.style.display = "none";
     }
 });
